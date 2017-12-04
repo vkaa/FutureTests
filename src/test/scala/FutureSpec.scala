@@ -19,4 +19,14 @@ class FutureSpec extends FlatSpec with Matchers {
       println(s"transformed result: ${ret}")
       println(s"transformed result: ${ret.getClass}")
     }
+
+  "Future" should "transform without exception" in {
+    val futFailed = Future.failed(new Exception("Exception in failed future"))
+    val transformed = futFailed.transform {
+      case Success(r) => Try(identity())
+      case Failure(e) => Try(e.getMessage)
+    }
+    val ret = Await.result(transformed, 1.seconds)
+    ret should be ("Exception in failed future")
+  }
 }
