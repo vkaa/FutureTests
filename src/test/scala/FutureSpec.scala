@@ -57,6 +57,7 @@ class FutureSpec extends FlatSpec with Matchers {
       BigDecimal
       ]
     val fut = Future.successful(123)
+    println(s"fut type: ${fut.getClass}")
     val toTry: Future[IntStatus] = fut.transform {
       case Success(r) => Try(Right(r))
       case Failure(e) => Try(Left(e.getMessage))
@@ -75,6 +76,7 @@ class FutureSpec extends FlatSpec with Matchers {
       BigDecimal
       ]
     val fut = Future.failed(new Exception("Exception in failed future"))
+    println(s"fut type: ${fut.getClass}")
     val toTry: Future[IntStatus] = fut.transform {
       case Success(r) => Try(Right(r))
       case Failure(e) => Try(Left(e.getMessage))
