@@ -41,7 +41,10 @@ class FutureSpec extends FlatSpec with Matchers {
 //        val versionPattern = "scalaVersion.*".r
         val versionPattern = "[0-9]+".r
         val versions = versionPattern.findAllIn(version)
-        versions.map(s => println(s))
+//        versions.map(s => println(s))
+        for ( v <- versions ) {
+          println(v)
+        }
       }
     }}
 //    val versionPattern = """([0-9]+)\.([0-9]+)""".r
