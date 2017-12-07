@@ -8,6 +8,54 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class FutureSpec extends FlatSpec with Matchers {
 
+  def using[A <: { def close(): Unit }, B](resource: A)(f: A => B): B =
+    try {
+      f(resource)
+    } finally {
+      resource.close()
+    }
+
+  it should "print currentDirectory" in {
+    val currentDirectory = new java.io.File(".").getCanonicalPath
+    println(s"Scala version: ${currentDirectory}")
+//    using(io.Source.fromFile(currentDirectory + "/build.sbt")) { source => {
+//      for (line <- source.getLines) {
+//        println(line)
+//      }
+//    }}
+//    using(io.Source.fromFile(currentDirectory + "/build.sbt")) { source => {
+//      for (line <- source.getLines.dropWhile(line => !line.startsWith("scalaVersion"))) {
+//        println(line)
+//      }
+//    }}
+//    using(io.Source.fromFile(currentDirectory + "/build.sbt")) { source => {
+//      for (line <- source.getLines.find(_.startsWith("scalaVersion"))) {
+//        println(line)
+//      }
+//    }}
+
+    using(io.Source.fromFile(currentDirectory + "/build.sbt")) { source => {
+      for ( version <- source.getLines.find(_.startsWith("scalaVersion"))) {
+        println(version)
+//        val versionPattern = ".*([0-9]+)".r
+//        val versionPattern = "scalaVersion.*".r
+        val versionPattern = "[0-9]+".r
+        val versions = versionPattern.findAllIn(version)
+        versions.map(s => println(s))
+      }
+    }}
+//    val versionPattern = """([0-9]+)\.([0-9]+)""".r
+//    using(io.Source.fromFile(currentDirectory + "/build.sbt")) { source => {
+//      for ( version <- source.getLines.find(_.startsWith("scalaVersion")).map(_ match {
+//        case versionPattern(major, minor) => (major, minor)
+//        case _ => ("x", "y")
+//      })) {
+//        println(version)
+//      }
+//    }}
+
+  }
+
   it should "throw Exception for Future.failed" in {
     val futFailed = Future.failed(new Exception("Exception in failed future"))
     an [Exception] should be thrownBy {
