@@ -66,6 +66,7 @@ class FutureSpec extends FlatSpec with Matchers {
     }
   }
 
+  /* Future.transform - scalaVersion := 2.12
   it should "transform Future.failed" in {
     val futFailed = Future.failed(new Exception("Exception in failed future"))
     val transformed = futFailed.transform {
@@ -77,7 +78,9 @@ class FutureSpec extends FlatSpec with Matchers {
     println(s"transformed result: ${ret}")
     println(s"transformed result: ${ret.getClass}")
   }
+  */
 
+  /* Future.transform - scalaVersion := 2.12
   it should "transform Future.failed without exception" in {
     val futFailed = Future.failed(new Exception("Exception in failed future"))
     val transformed = futFailed.transform {
@@ -87,7 +90,9 @@ class FutureSpec extends FlatSpec with Matchers {
     val ret = Await.result(transformed, 1.seconds)
     ret should be ("Exception in failed future")
   }
+  */
 
+  /* Future.transform - scalaVersion := 2.12
   it should "return result for Future.successful" in {
     val fut = Future.successful(123)
 //    println(s"fut: ${fut}")
@@ -101,7 +106,9 @@ class FutureSpec extends FlatSpec with Matchers {
 //    println(s"toTry result: ${ret.getClass}")
     ret should be (123)
   }
+  */
 
+  /* Future.transform - scalaVersion := 2.12
   it should "return Right for Future.successful" in {
     type IntStatus = Either[
       String,
@@ -120,7 +127,9 @@ class FutureSpec extends FlatSpec with Matchers {
       case Right(v) => v should be (123)
     }
   }
+  */
 
+  /* Future.transform - scalaVersion := 2.12
   it should "return Left for Future.failed" in {
     type IntStatus = Either[
       String,
@@ -139,4 +148,5 @@ class FutureSpec extends FlatSpec with Matchers {
       case Right(_) => fail("Future.failed should not be transformed to Right")
     }
   }
+  */
 }
