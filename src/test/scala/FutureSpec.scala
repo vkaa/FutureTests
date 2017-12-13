@@ -139,4 +139,42 @@ class FutureSpec extends FlatSpec with Matchers {
       case Right(_) => fail("Future.failed should not be transformed to Right")
     }
   }
+
+  sealed trait ListFp[+A]
+  case object NilFp extends ListFp[Nothing]
+  case class ConsFp[+A](head: A, tail: ListFp[A]) extends ListFp[A]
+
+  object ListFp {
+    def apply[A](as: A*): ListFp[A] =
+      if (as.isEmpty) NilFp
+      else ConsFp(as.head, apply(as.tail: _*))
+  }
+
+  def foldRightFp[A,B](as: ListFp[A], z: B)(f: (A, B) => B): B = as match {
+    case NilFp => z
+    case ConsFp(x, xs) => f(x, foldRightFp(xs, z)(f))
+  }
+
+  it should "use foldRight" in {
+    val folded = foldRightFp(ListFp(1, 2, 3), NilFp: ListFp[Int])(ConsFp(_, _))
+    folded match {
+      case ConsFp(x, xs) => {
+        x should be (1)
+        xs match {
+          case ConsFp(x, xs) => {
+            x should be (2)
+            xs match {
+              case ConsFp(x, xs) => {
+                x should be (3)
+                xs should be (NilFp)
+              }
+              case _  => fail("Folded third element")
+            }
+          }
+          case _  => fail("Folded second element")
+        }
+      }
+      case _ => fail("Folded first element")
+    }
+  }
 }
